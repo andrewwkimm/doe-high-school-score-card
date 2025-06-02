@@ -9,7 +9,7 @@ Run theses following commands after setting up your environment and get the late
 ```bash
 npm install -g @google/clasp
 clasp login
-clasp clone <project-id>
+clasp clone <Script-ID>
 ```
 
 Pushing to this repository automatically pushes changes to the Apps Script project, but to also do it locally:
