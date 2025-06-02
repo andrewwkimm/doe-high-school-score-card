@@ -8,7 +8,7 @@ Run theses following commands after setting up your environment and get the late
 
 ```bash
 npm install -g @google/clasp
-clasp login
+clasp login # Login with the Google Account associated with your Apps Script project
 clasp clone <Script-ID>
 ```
 
