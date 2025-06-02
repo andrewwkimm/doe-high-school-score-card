@@ -1,0 +1,8 @@
+# Absolute paths
+
+/.clasp.json
+/oauth.json
+/scratch/*
+
+# Exclusions
+!/scratch/README.md
