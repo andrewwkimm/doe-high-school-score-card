@@ -37,7 +37,7 @@ jobs:
       - name: Deploy and extract URL
         id: deploy
         run: |
-          DEPLOY_OUTPUT=$(clasp deploy)
+          DEPLOY_OUTPUT=$(clasp deploy --description "Auto-deployment from GitHub Actions")
           echo "Deploy output: $DEPLOY_OUTPUT"
           
           DEPLOYMENT_ID=$(echo "$DEPLOY_OUTPUT" | grep -oP 'AKfyc[A-Za-z0-9_-]+')
