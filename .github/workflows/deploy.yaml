@@ -26,6 +26,8 @@ jobs:
           
       - name: Verify credentials file
         run: |
+          pwd
+          ls
           ls -la ~/.clasprc.json
           head -c 100 ~/.clasprc.json
 
