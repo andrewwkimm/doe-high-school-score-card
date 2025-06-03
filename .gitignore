@@ -1,6 +1,5 @@
 # Absolute paths
 
-/.clasp.json
 /oauth.json
 /scratch/*
 
