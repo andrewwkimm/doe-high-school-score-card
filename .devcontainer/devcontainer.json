@@ -9,7 +9,6 @@
       ]
     }
   },
-  "postCreateCommand": "npm install -g @google/clasp",
   "forwardPorts": [],
   "mounts": [],
   "remoteEnv": {
