@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <base target="_top" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>DOE High School Scorecard</title>
+  <link rel="stylesheet" href="/styles.css" />
+  <link rel="icon" type="image/x-icon" href="https://atthetable.org/favicon.ico" />
+</head>
+
+<body>
+  <header>
+    <div class="logo-container" style="text-align: center;">
+      <img
+        src="https://images.squarespace-cdn.com/content/v1/5ede82e874b119764cf17643/1595283482782-91Z34289WNXXP4V8D7SR/Asset+19.png?format=1500w"
+        alt="At the Table Logo"
+        style="width: 192px;"
+      />
+      <h1>DOE High School Scorecard</h1>
+    </div>
+  </header>
+
+  <main>
+    <form id="filtersForm" novalidate>
+      <div class="form-group">
+        <label for="borough-display">I want my school in:</label>
+        <div class="multi-select-container">
+          <div
+            class="multi-select-dropdown"
+            id="borough-dropdown"
+            tabindex="0"
+            onclick="toggleDropdown()"
+          >
+            <span id="borough-display">Any borough</span>
+            <div class="selected-tags" id="borough-tags"></div>
+          </div>
+          <div class="multi-select-options" id="borough-options">
+            <label class="multi-select-option"
+              ><input
+                type="checkbox"
+                id="bronx"
+                value="Bronx"
+                onchange="updateBoroughSelection()"
+              />
+              Bronx</label
+            >
+            <label class="multi-select-option"
+              ><input
+                type="checkbox"
+                id="brooklyn"
+                value="Brooklyn"
+                onchange="updateBoroughSelection()"
+              />
+              Brooklyn</label
+            >
+            <label class="multi-select-option"
+              ><input
+                type="checkbox"
+                id="manhattan"
+                value="Manhattan"
+                onchange="updateBoroughSelection()"
+              />
+              Manhattan</label
+            >
+            <label class="multi-select-option"
+              ><input
+                type="checkbox"
+                id="queens"
+                value="Queens"
+                onchange="updateBoroughSelection()"
+              />
+              Queens</label
+            >
+            <label class="multi-select-option"
+              ><input
+                type="checkbox"
+                id="staten-island"
+                value="Staten Island"
+                onchange="updateBoroughSelection()"
+              />
+              Staten Island</label
+            >
+          </div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="schoolType">I prefer to go to a career technical school or a general high school:</label>
+        <select id="schoolType" name="schoolType">
+          <option value="No Preference">No Preference</option>
+          <option value="General Academic">General Academic</option>
+          <option value="Career Technical">Career Technical</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="gradRate">I am looking for a high school that has at least the graduation rate (50-100):</label>
+        <div class="hint">(i.e., most students graduate on time)</div>
+        <input type="number" id="gradRate" name="gradRate" min="50" max="100" value="90" />
+      </div>
+
+      <div class="form-group">
+        <label for="creditRate">I am looking for a high school with at least the 9th grade credit accumulation rate (40-100):</label>
+        <div class="hint">(i.e., students pass most classes in 9th grade)</div>
+        <input type="number" id="creditRate" name="creditRate" min="40" max="100" value="90" />
+      </div>
+
+      <div class="form-group">
+        <label for="admissionsType">I only want to see schools with Ed Opt. or Open admissions:</label>
+        <select id="admissionsType" name="admissionsType">
+          <option value="No Preference">No Preference</option>
+          <option value="Yes">Yes</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="address">What is the address where you live:</label>
+        <input
+          type="text"
+          id="address"
+          name="address"
+          placeholder="Enter your home address"
+          autocomplete="street-address"
+        />
+      </div>
+    </form>
+
+    <div class="button-group">
+      <button type="button" onclick="findSchools()">Search Schools</button>
+      <button type="button" class="export-btn" onclick="exportToCSV()" id="exportBtn" style="display: none;">
+        Export to CSV
+      </button>
+    </div>
+
+    <section id="results"></section>
+  </main>
+
+  <footer>
+    <div style="text-align: center; font-size: 0.85em; color: #666; margin-top: 40px;">
+      © At the Table 2025
+    </div>
+  </footer>
+
+  <script src="/script.js" defer></script>
+</body>
+</html>
