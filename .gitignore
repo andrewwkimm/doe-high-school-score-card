@@ -1,7 +1,9 @@
 # Absolute paths
 
-/oauth.json
+/.env
+/gcp-service-account-key.json
 /scratch/*
+/node_modules
 
 # Exclusions
 !/scratch/README.md
