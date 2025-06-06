@@ -149,7 +149,7 @@ function processTransitTimesInBatches(schools, userAddress) {
     const batch = schools.slice(i, i + batchSize);
 
     batch.forEach(school => {
-      const schoolAddressWithBorough = `${school['School Address']} ${school['School Borough']}`;
+      const schoolAddressWithBorough = `${school['School Address']} ${school['Borough']}`;
       school['Transit Time'] = getTransitTime(userAddress, schoolAddressWithBorough);
     });
 
