@@ -3,28 +3,28 @@
   <head>
     <base target="_top">
     <style>
-      body { 
+      body {
         font-family: 'Inter', 'Segoe UI';
-        padding: 20px; 
-        max-width: 1200px; 
-        margin: 0 auto; 
+        padding: 20px;
+        max-width: 1200px;
+        margin: 0 auto;
       }
-      .form-group { 
-        margin-bottom: 15px; 
+      .form-group {
+        margin-bottom: 15px;
       }
-      label { 
-        display: block; 
-        margin-bottom: 5px; 
-        font-weight: bold; 
+      label {
+        display: block;
+        margin-bottom: 5px;
+        font-weight: bold;
       }
-      select, input { 
-        width: 100%; 
-        padding: 8px; 
-        margin-bottom: 10px; 
-        border: 1px solid #ddd; 
-        border-radius: 4px; 
+      select, input {
+        width: 100%;
+        padding: 8px;
+        margin-bottom: 10px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
       }
-      
+
       /* Multi-select styling */
       .multi-select-container {
         position: relative;
@@ -87,18 +87,18 @@
         cursor: pointer;
         font-weight: bold;
       }
-      
-      button { 
-        padding: 10px 20px; 
-        background: #4CAF50; 
-        color: white; 
-        border: none; 
-        border-radius: 4px; 
-        cursor: pointer; 
+
+      button {
+        padding: 10px 20px;
+        background: #4CAF50;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
         margin-right: 10px;
       }
-      button:hover { 
-        background: #45a049; 
+      button:hover {
+        background: #45a049;
       }
       .export-btn {
         background: #2196F3;
@@ -106,19 +106,19 @@
       .export-btn:hover {
         background: #1976D2;
       }
-      table { 
-        width: 100%; 
-        border-collapse: collapse; 
+      table {
+        width: 100%;
+        border-collapse: collapse;
         margin-top: 20px;
         font-size: 14px;
       }
-      th, td { 
-        padding: 12px 8px; 
-        text-align: left; 
-        border-bottom: 1px solid #ddd; 
+      th, td {
+        padding: 12px 8px;
+        text-align: left;
+        border-bottom: 1px solid #ddd;
       }
-      th { 
-        background-color: #f5f5f5; 
+      th {
+        background-color: #f5f5f5;
         font-weight: bold;
         cursor: pointer;
         position: relative;
@@ -145,8 +145,8 @@
         border-top: 5px solid #333;
         border-bottom: none;
       }
-      .results { 
-        margin-top: 20px; 
+      .results {
+        margin-top: 20px;
       }
       .error {
         color: red;
@@ -248,7 +248,7 @@
       <button onclick="findSchools()">Search Schools</button>
       <button class="export-btn" onclick="exportToCSV()" id="exportBtn" style="display: none;">Export to CSV</button>
     </div>
-    
+
     <div id="results"></div>
 
     <script>
@@ -266,7 +266,7 @@
       function updateBoroughSelection() {
         const checkboxes = document.querySelectorAll('#borough-options input[type="checkbox"]');
         selectedBoroughs = [];
-        
+
         checkboxes.forEach(checkbox => {
           if (checkbox.checked) {
             selectedBoroughs.push(checkbox.value);
@@ -279,14 +279,14 @@
       function updateBoroughDisplay() {
         const display = document.getElementById('borough-display');
         const tagsContainer = document.getElementById('borough-tags');
-        
+
         if (selectedBoroughs.length === 0) {
           display.textContent = 'No Preference';
           display.style.display = 'block';
           tagsContainer.innerHTML = '';
         } else {
           display.style.display = 'none';
-          tagsContainer.innerHTML = selectedBoroughs.map(borough => 
+          tagsContainer.innerHTML = selectedBoroughs.map(borough =>
             `<span class="tag">${borough} <span class="tag-remove" onclick="removeBoroughTag('${borough}')">×</span></span>`
           ).join('');
         }
@@ -313,7 +313,7 @@
         const exportBtn = document.getElementById('exportBtn');
         resultsDiv.innerHTML = '<p>Searching for schools... Please be patient as it can take a few minutes for the results to load. Thank you!</p>';
         exportBtn.style.display = 'none';
-        
+
         const filters = {
           boroughs: selectedBoroughs,
           schoolType: document.getElementById('schoolType').value,
@@ -365,12 +365,12 @@
 
       function displayResults(schools) {
         const resultsDiv = document.getElementById('results');
-        
+
         if (!schools) {
           resultsDiv.innerHTML = '<p class="error">Error: No data received from server</p>';
           return;
         }
-        
+
         if (schools.length === 0) {
           resultsDiv.innerHTML = '<p>No schools found matching your criteria.</p>';
           return;
@@ -408,8 +408,8 @@
               </tr>`;
 
         schools.forEach(school => {
-          const schoolNameCell = school['School Link'] ? 
-            `<a href="${school['School Link']}" target="_blank">${school['School Name']}</a>` : 
+          const schoolNameCell = school['School Link'] ?
+            `<a href="${school['School Link']}" target="_blank">${school['School Name']}</a>` :
             school['School Name'];
 
           html += `
