@@ -32,4 +32,4 @@ jobs:
           head -c 100 ~/.clasprc.json
 
       - name: Push to Apps Script
-        run: clasp push -y
+        run: clasp push
