@@ -38,7 +38,7 @@ async function addTransitTimes(schools, userAddress) {
     const batch = schools.slice(i, i + batchSize);
     await Promise.all(batch.map(async school => {
       const origin = userAddress;
-      const destination = school['School Address'];
+      const destination = `${school['School Address']} ${school['Borough']}`;
       school['Transit Time'] = await getTransitTime(origin, destination);
     }));
     if (i + batchSize < schools.length) {
