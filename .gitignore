@@ -1,7 +1,9 @@
 # Absolute paths
 
+/.env
 /oauth.json
 /scratch/*
+/node_modules
 
 # Exclusions
 !/scratch/README.md
