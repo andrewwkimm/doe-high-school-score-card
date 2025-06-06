@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      
+
       - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
@@ -23,7 +23,7 @@ jobs:
         run: |
           mkdir -p ~/.config/@google
           echo '${{ secrets.CLASP_CREDENTIALS }}' > ~/.clasprc.json
-          
+
       - name: Verify credentials file
         run: |
           pwd
@@ -33,35 +33,3 @@ jobs:
 
       - name: Push to Apps Script
         run: clasp push
-
-      - name: Deploy and extract URL
-        id: deploy
-        run: |
-          DEPLOY_OUTPUT=$(clasp deploy --description "Auto-deployment from GitHub Actions")
-          echo "Deploy output: $DEPLOY_OUTPUT"
-          
-          DEPLOYMENT_ID=$(echo "$DEPLOY_OUTPUT" | grep -oP 'AKfyc[A-Za-z0-9_-]+')
-          
-          if [ -z "$DEPLOYMENT_ID" ]; then
-            echo "Failed to extract deployment ID, trying alternative method..."
-            DEPLOYMENT_ID=$(clasp deployments | tail -1 | grep -oP 'AKfyc[A-Za-z0-9_-]+')
-          fi
-          
-          WEB_APP_URL="https://script.google.com/macros/s/${DEPLOYMENT_ID}/exec"
-          echo "New URL: $WEB_APP_URL"
-          echo "url=$WEB_APP_URL" >> $GITHUB_OUTPUT
-
-      - name: Update HTML
-        env:
-          NEW_URL: ${{ steps.deploy.outputs.url }}
-        run: |
-          git config --global user.name "andrewwkimm"
-          git config --global user.email "andrewkimka@gmail.com"
-          
-          git checkout render
-          
-          sed -i 's|src="https://script\.google\.com/macros/s/[^"]*"|src="'$NEW_URL'"|g' index.html
-          
-          git add index.html
-          git commit -m "Update HTML to reflect latest deployment"
-          git push origin render
