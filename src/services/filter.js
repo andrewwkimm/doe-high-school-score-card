@@ -1,9 +1,35 @@
 const { loadSchoolsData } = require('./googleSheets');
 const { getTransitTime } = require('./googleMaps');
 
+const COLUMN_RENAMES = {
+  'Borough': 'School Borough',
+  'Transit Time': 'Transit Time (minutes)',
+  '% Graduation Rate (2019)': '% Graduation Rate'
+};
+
+const FIELDS = [
+  'Rating', 'DBN', 'School Name', 'School Link', 'School Address', 'Borough', 'Transit Time',
+  'Enrollment', '% Graduation Rate (2019)', '% Freshman 10 credit accumulation',
+  'School Type', 'Admissions Criteria', 'College and Career Readiness',
+  '% Students Reporting Frequent Bullying', '% Female', '% Male', '% ELL',
+  '% Students with Disabilities', '% Sophomore 10 credit accumulation',
+  '% Junior 10 credit accumulation', '% Asian', '% Black', '% Hispanic',
+  '% White', '% Native American', '% Multiracial'
+];
+
 function parseNumber(str) {
   const num = parseFloat(str);
   return isNaN(num) ? 0 : num;
+}
+
+function transformField(field, value) {
+  if (value === undefined) return '';
+  if (typeof value === 'string' && value.trim() === '') return '';
+  if (field.startsWith('%') || typeof value === 'number') {
+    const num = parseFloat(value);
+    return isNaN(num) ? '0.0' : num.toFixed(1);
+  }
+  return value;
 }
 
 async function addTransitTimes(schools, userAddress) {
@@ -15,8 +41,6 @@ async function addTransitTimes(schools, userAddress) {
       const destination = school['School Address'];
       school['Transit Time'] = await getTransitTime(origin, destination);
     }));
-
-    // delay between batches to be gentle on API
     if (i + batchSize < schools.length) {
       await new Promise(r => setTimeout(r, 1000));
     }
@@ -26,29 +50,24 @@ async function addTransitTimes(schools, userAddress) {
 async function filterSchools(filters) {
   let schools = await loadSchoolsData();
 
-  // Boroughs filter
   if (filters.boroughs && filters.boroughs.length > 0) {
     schools = schools.filter(s => filters.boroughs.includes(s['Borough']));
   }
 
-  // School Type
   if (filters.schoolType && filters.schoolType !== 'No Preference') {
     schools = schools.filter(s => s['School Type'] === filters.schoolType);
   }
 
-  // Graduation Rate
   if (filters.gradRate) {
     const minGrad = parseFloat(filters.gradRate);
     schools = schools.filter(s => parseNumber(s['% Graduation Rate (2019)']) >= minGrad);
   }
 
-  // Credit Accumulation
   if (filters.creditRate) {
     const minCredit = parseFloat(filters.creditRate);
     schools = schools.filter(s => parseNumber(s['% Freshman 10 credit accumulation']) >= minCredit);
   }
 
-  // Admissions
   if (filters.admissionsType === 'Yes') {
     schools = schools.filter(s => {
       const criteria = s['Admissions Criteria'] || '';
@@ -56,41 +75,20 @@ async function filterSchools(filters) {
     });
   }
 
-  // Transit times
   if (filters.address && filters.address.trim()) {
     await addTransitTimes(schools, filters.address.trim());
   } else {
     schools.forEach(s => s['Transit Time'] = 'N/A');
   }
 
-  return schools.map(s => ({
-    'Rating': s['Rating'],
-    'DBN': s['DBN'],
-    'School Name': s['School Name'],
-    'School Link': s['School Link'],
-    'School Address': s['School Address'],
-    'Borough': s['Borough'],
-    'Transit Time': s['Transit Time'],
-    'Enrollment': s['Enrollment'],
-    '% Graduation Rate (2019)': parseFloat(s['% Graduation Rate (2019)'] || 0).toFixed(1),
-    '% Freshman 10 credit accumulation': parseFloat(s['% Freshman 10 credit accumulation'] || 0).toFixed(1),
-    'School Type': s['School Type'],
-    'Admissions Criteria': s['Admissions Criteria'],
-    'College and Career Readiness': parseFloat(s['College and Career Readiness'] || 0).toFixed(1),
-    '% Students Reporting Frequent Bullying': s['% Students Reporting Frequent Bullying'],
-    '% Female': parseFloat(s['% Female'] || 0).toFixed(1),
-    '% Male': parseFloat(s['% Male'] || 0).toFixed(1),
-    '% ELL': parseFloat(s['% ELL'] || 0).toFixed(1),
-    '% Students with Disabilities': parseFloat(s['% Students with Disabilities'] || 0).toFixed(1),
-    '% Sophomore 10 credit accumulation': parseFloat(s['% Sophomore 10 credit accumulation'] || 0).toFixed(1),
-    '% Junior 10 credit accumulation': parseFloat(s['% Junior 10 credit accumulation'] || 0).toFixed(1),
-    '% Asian': parseFloat(s['% Asian'] || 0).toFixed(1),
-    '% Black': parseFloat(s['% Black'] || 0).toFixed(1),
-    '% Hispanic': parseFloat(s['% Hispanic'] || 0).toFixed(1),
-    '% White': parseFloat(s['% White'] || 0).toFixed(1),
-    '% Native American': parseFloat(s['% Native American'] || 0).toFixed(1),
-    '% Multiracial': parseFloat(s['% Multiracial'] || 0).toFixed(1)
-  }));
+  return schools.map(s => {
+    const result = {};
+    for (const field of FIELDS) {
+      const renamed = COLUMN_RENAMES[field] || field;
+      result[renamed] = transformField(field, s[field]);
+    }
+    return result;
+  });
 }
 
 module.exports = {
