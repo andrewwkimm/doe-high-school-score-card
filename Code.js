@@ -149,7 +149,8 @@ function processTransitTimesInBatches(schools, userAddress) {
     const batch = schools.slice(i, i + batchSize);
 
     batch.forEach(school => {
-      school['Transit Time'] = getTransitTime(userAddress, school['School Address']);
+      const schoolAddressWithBorough = `${school['School Address']} ${school['School Borough']}`;
+      school['Transit Time'] = getTransitTime(userAddress, schoolAddressWithBorough);
     });
 
     // Add a small delay between batches to avoid rate limits
